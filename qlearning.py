@@ -8,8 +8,8 @@ START = np.array([2, 0])
 class State:
     def __init__(self, state=START, determine=True):
         self.board = np.zeros([BOARD_ROWS, BOARD_COLS])
-        self.size = np.array([BOARD_ROWS, BOARD_COLS])
         self.board[1, 1] = -1 #obstacles
+        self.size = np.array([BOARD_ROWS, BOARD_COLS])
         self.state = state
         self.determine = determine
         self.transition = {
@@ -39,9 +39,9 @@ class State:
             action = np.random.choice(['u', 'd', 'l', 'r'])
 
         newstate = self.state + self.transition[action]
-        newstate = np.clip(newstate, (0,0), self.size-1)
+        newstate = np.clip(newstate, (0,0), self.size-1) # whether hit the wall
 
-        if self.board[tuple(newstate)] == 0.:
+        if self.board[tuple(newstate)] == 0.: #whether go to obstacle
             self.state = newstate
 
         reward = -1.
@@ -116,3 +116,8 @@ class Agent:
         if self.debug == True:
             self.State.showBoard()
             self.showQ()
+
+if __name__ == "__main__":
+    agent = Agent()
+    for i in range(1000):
+        agent.step()
